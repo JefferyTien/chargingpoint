@@ -15,25 +15,25 @@ import com.reddoor.charging.server.handler.impl.TerminateChargingHandler;
 public class ServerSocketAction implements Action{
 
 	@Override
-	public void doAction(Socket socket, Object data) {
-		BaseMessage message = MessageHelper.parseObject(data.toString());
+	public void doAction(Socket socket, byte[] data) {
+		BaseMessage message = MessageHelper.transformFromByte(data);
 		switch(message.getType()){
 		case MessageType.START_CHARGING:
-			(new StartChargingHandler()).handle(socket, data);
+			(new StartChargingHandler()).handle(socket, message);
 			break;
 		case MessageType.FULLY_CHARGED:
-			(new FullyChargedHandler()).handle(socket, data);
+			(new FullyChargedHandler()).handle(socket, message);
 			break;
 		case MessageType.TERMINATE_CHARGING:
-			(new TerminateChargingHandler()).handle(socket, data);
+			(new TerminateChargingHandler()).handle(socket, message);
 			break;
 		case MessageType.HEART_BEAT:
-			(new HeartBeatHandler()).handle(socket, data);
+			(new HeartBeatHandler()).handle(socket, message);
 			break;
 		}
 		
 		// publish to observer, UI react accordingly
-		PublisherHolder.getPublisher().publishMsg(socket, data);
+		PublisherHolder.getPublisher().publishCmd(socket, message);
 	}
 	
 }

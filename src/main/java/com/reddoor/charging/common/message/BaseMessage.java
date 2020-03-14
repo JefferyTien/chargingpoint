@@ -1,33 +1,31 @@
 package com.reddoor.charging.common.message;
 
-public class BaseMessage {
-	protected String from;
-	protected String to;
-	protected String owner;
+import com.reddoor.charging.common.message.transform.Transformer;
+
+public abstract class BaseMessage implements Transformer{
+	// message类型(指令类型)
 	protected int type;
+	// 充电桩ID
+	protected long deviceId;
+	// 充电桩上的插口ID
+	protected int portId;
 	
-	public String getFrom() {
-		return from;
-	}
-	public String getTo() {
-		return to;
-	}
-	public String getOwner() {
-		return owner;
-	}
 	public int getType() {
 		return type;
 	}
-	public void setFrom(String from) {
-		this.from = from;
-	}
-	public void setTo(String to) {
-		this.to = to;
-	}
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
 	public void setType(int type) {
 		this.type = type;
+	}
+	public long getDeviceId() {
+		return deviceId;
+	}
+	public int getPortId() {
+		return portId;
+	}
+	public void setDeviceId(long deviceId) {
+		this.deviceId = deviceId;
+	}
+	public void setPortId(int portId) {
+		this.portId = portId;
 	}
 }

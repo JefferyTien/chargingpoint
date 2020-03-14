@@ -35,7 +35,7 @@ public class ServerFrame extends JFrame{
 	
 	private Server server;
 	
-	private String selectedClient;
+	private String selectedDevice;
 
 	public ServerFrame(){
 		this.init();
@@ -80,10 +80,10 @@ public class ServerFrame extends JFrame{
 
 		            if (list.getSelectedIndex() == -1) {
 		            //No selection
-		            	selectedClient = null;
+		            	selectedDevice = null;
 		            } else {
 		            //Selection
-		            	selectedClient = (String)list.getSelectedValue();
+		            	selectedDevice = (String)list.getSelectedValue();
 		            }
 		        }
 			}
@@ -105,9 +105,11 @@ public class ServerFrame extends JFrame{
         JButton btnStart = new JButton("启动");
         JButton btnPrepareCharging = new JButton("准备充电");
         JButton btnEndCharging = new JButton("结束充电");
+        JButton btnSetHeartbeatInterval = new JButton("设置心跳间隔");
         bottomPanel.add(btnStart);
         bottomPanel.add(btnPrepareCharging);
         bottomPanel.add(btnEndCharging);
+        bottomPanel.add(btnSetHeartbeatInterval);
         
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         
@@ -131,9 +133,9 @@ public class ServerFrame extends JFrame{
 					return;
 				}
 				Logger.log("准备充电");
-				appendCommandLine("准备充电 ==> "+selectedClient);
-				SocketWrapper wrapper = SocketHolder.get(selectedClient);
-				action.doPrepareCharging(wrapper.getSocket());
+				appendCommandLine("准备充电 ==> "+selectedDevice);
+				SocketWrapper wrapper = SocketHolder.get("Device-" + selectedDevice);
+				action.doPrepareCharging(wrapper.getSocket(), Long.parseLong(selectedDevice));
 			}
 		});
         
@@ -145,15 +147,29 @@ public class ServerFrame extends JFrame{
 					return;
 				}
 				Logger.log("结束充电");
-				appendCommandLine("结束充电 ==> "+selectedClient);
-				SocketWrapper wrapper = SocketHolder.get(selectedClient);
-				action.doEndCharging(wrapper.getSocket());
+				appendCommandLine("结束充电 ==> "+selectedDevice);
+				SocketWrapper wrapper = SocketHolder.get("Device-" + selectedDevice);
+				action.doEndCharging(wrapper.getSocket(), Long.parseLong(selectedDevice));
+			}
+		});
+        
+        btnSetHeartbeatInterval.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!checkSelectedClient()){
+					return;
+				}
+				Logger.log("设置心跳间隔");
+				appendCommandLine("设置心跳间隔 ==> "+selectedDevice);
+				SocketWrapper wrapper = SocketHolder.get("Device-" + selectedDevice);
+				action.doSetHeartbeatInterval(wrapper.getSocket(), Long.parseLong(selectedDevice));
 			}
 		});
 	}
 	
 	private boolean checkSelectedClient(){
-		if(null == selectedClient || "".equals(selectedClient)){
+		if(null == selectedDevice || "".equals(selectedDevice)){
 			JOptionPane.showMessageDialog(null, "请选择要通信的客户端", "标题",JOptionPane.WARNING_MESSAGE);  
 			return false;
 		}
@@ -188,6 +204,14 @@ public class ServerFrame extends JFrame{
 
 	public void setAction(ServerFrameAction action) {
 		this.action = action;
+	}
+
+	public String getSelectedDevice() {
+		return selectedDevice;
+	}
+
+	public void setSelectedDevice(String selectedDevice) {
+		this.selectedDevice = selectedDevice;
 	}
 
 

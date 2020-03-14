@@ -15,7 +15,7 @@ public class Client extends Thread{
 	private Socket socket;
 	private final ExecutorService pool;
 	
-	private String from;
+	private long deviceId;
 	
 	public Client() {
 		this.pool = Executors.newFixedThreadPool(2);
@@ -40,15 +40,7 @@ public class Client extends Thread{
 	}
 	
 	public void startHeartBeat(){
-		pool.execute(new HeartBeat(socket, from, "127.0.0.1"));
-	}
-
-	public String getFrom() {
-		return from;
-	}
-
-	public void setFrom(String from) {
-		this.from = from;
+		pool.execute(new HeartBeat(socket, deviceId));
 	}
 
 	public Socket getSocket() {
@@ -57,5 +49,13 @@ public class Client extends Thread{
 
 	public void setSocket(Socket socket) {
 		this.socket = socket;
+	}
+
+	public long getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(long deviceId) {
+		this.deviceId = deviceId;
 	}
 }

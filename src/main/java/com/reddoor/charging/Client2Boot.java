@@ -11,11 +11,13 @@ import com.reddoor.charging.util.IDUtil;
 public class Client2Boot {
 	public static void main(String[] args) {
 		// create a random name for client
-		String clientName = "Client-"+IDUtil.jvmPid();
+		String pid = IDUtil.jvmPid();
+		String deviceName = "Device-"+pid;
 				
 		Client client = new Client();
 		ClientHolder.setClient(client);
-		client.setFrom(clientName);
+		client.setDeviceId(Long.parseLong(pid));
+		System.out.println("device id is " + Long.parseLong(pid));
 		
 		Publisher publisher = new Publisher();
 		PublisherHolder.setPublisher(publisher);
@@ -27,7 +29,7 @@ public class Client2Boot {
 		clientFrame.setAction(frameAction);
 		frameAction.setClientFrame(clientFrame);
 		
-		clientFrame.setTitle("客户端                "+clientName);
+		clientFrame.setTitle("客户端                "+deviceName);
 		clientFrame.setLocation(100,150);
 		
 		clientFrame.setVisible(true);

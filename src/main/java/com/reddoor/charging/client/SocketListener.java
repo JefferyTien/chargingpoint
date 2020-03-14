@@ -1,9 +1,7 @@
 package com.reddoor.charging.client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.Socket;
 
 import com.reddoor.charging.common.Action;
@@ -28,14 +26,19 @@ public class SocketListener implements Runnable{
 					StringBuffer sb = null;
 					
 					if(is.available() > 0){
-						BufferedReader bufr = new BufferedReader(new InputStreamReader(is));
+//						BufferedReader bufr = new BufferedReader(new InputStreamReader(is));
+//						line = bufr.readLine();
+						
 //						sb = new StringBuffer();
 //						while((is.available() > 0) && (line = bufr.readLine()) != null){
 //							sb.append(line);
 //						}
-						line = bufr.readLine();
 						
-						action.doAction(socket, line);
+						// 读取字节流
+						byte[] data = new byte[100];
+						int len = is.read(data);
+						
+						action.doAction(socket, data);
 					}
 					
 					

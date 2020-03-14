@@ -20,10 +20,19 @@ public class Publisher extends Observable{
 //        notifyObservers();    
 //    }
     
+    
+    public void publishCmd(Socket socket, BaseMessage baseMessage){
+		this.data = baseMessage;
+        setChanged();    //改变通知者的状态
+        notifyObservers();    //调用父类Observable方法，通知所有观察者
+	}
+    
 	public void publishMsg(Socket socket, Object data){
 		BaseMessage baseMessage = MessageHelper.parseObject(data.toString());
 		this.data = baseMessage;
         setChanged();    //改变通知者的状态
         notifyObservers();    //调用父类Observable方法，通知所有观察者
 	}
+	
+	
 }

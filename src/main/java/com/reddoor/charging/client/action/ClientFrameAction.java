@@ -31,10 +31,25 @@ public class ClientFrameAction implements Observer{
 		String commandContent = "";
 		switch(message.getType()){
 		case MessageType.PREPARE_CHARGING:
-			commandContent = "[from server] prepare charging";
+			commandContent = "[from server] PREPARE_CHARGING";
 			break;
 		case MessageType.END_CHARGING:
-			commandContent = "[from server] end charging";
+			commandContent = "[from server] END_CHARGING";
+			break;
+		case MessageType.SET_HEARTBEAT_INTERVAL:
+			commandContent = "[from server] SET_HEARTBEAT_INTERVAL";
+			break;
+		case MessageType.HEART_BEAT_RESP:
+			commandContent = "[from server] HEART_BEAT_RESP";
+			break;
+		case MessageType.FULLY_CHARGED_RESP:
+			commandContent = "[from server] FULLY_CHARGED_RESP";
+			break;
+		case MessageType.START_CHARGING_RESP:
+			commandContent = "[from server] START_CHARGING_RESP";
+			break;
+		case MessageType.TERMINATE_CHARGING_RESP:
+			commandContent = "[from server] TERMINATE_CHARGING_RESP";
 			break;
 		}
 		
@@ -47,8 +62,9 @@ public class ClientFrameAction implements Observer{
 			return;
 		}
 		StartChargingMessage msg = new StartChargingMessage();
-		msg.setFrom(ClientHolder.getClient().getFrom());
-		MessageHelper.sendMsg(socket, msg);
+		msg.setDeviceId(ClientHolder.getClient().getDeviceId());
+		msg.setPortId(Integer.parseInt("00", 16));
+		MessageHelper.sendCmd(socket, msg);
 		System.out.println("handleStartCharging");
 		
 		clientFrame.appendCommandLine("开始充电");
@@ -59,8 +75,8 @@ public class ClientFrameAction implements Observer{
 			return;
 		}
 		FullyChargedMessage msg = new FullyChargedMessage();
-		msg.setFrom(ClientHolder.getClient().getFrom());
-		MessageHelper.sendMsg(socket, msg);
+		msg.setDeviceId(ClientHolder.getClient().getDeviceId());
+		MessageHelper.sendCmd(socket, msg);
 		System.out.println("handleFullyCharged");
 		
 		clientFrame.appendCommandLine("充满");
@@ -71,8 +87,8 @@ public class ClientFrameAction implements Observer{
 			return;
 		}
 		TerminateChargingMessage msg = new TerminateChargingMessage();
-		msg.setFrom(ClientHolder.getClient().getFrom());
-		MessageHelper.sendMsg(socket, msg);
+		msg.setDeviceId(ClientHolder.getClient().getDeviceId());
+		MessageHelper.sendCmd(socket, msg);
 		System.out.println("handleTerminateCharging");
 		
 		clientFrame.appendCommandLine("终止充电");
