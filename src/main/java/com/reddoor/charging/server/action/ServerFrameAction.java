@@ -4,7 +4,6 @@ import java.net.Socket;
 import java.util.Observable;
 import java.util.Observer;
 
-import com.reddoor.charging.client.ClientHolder;
 import com.reddoor.charging.common.MessageHelper;
 import com.reddoor.charging.common.message.BaseMessage;
 import com.reddoor.charging.common.message.EndChargingMessage;
@@ -13,6 +12,8 @@ import com.reddoor.charging.common.message.PrepareChargingMessage;
 import com.reddoor.charging.common.message.SetHeartbeatIntervalMessage;
 import com.reddoor.charging.common.observe.Publisher;
 import com.reddoor.charging.server.ServerFrame;
+import com.reddoor.charging.server.SocketHolder;
+import com.reddoor.charging.server.SocketWrapper;
 
 public class ServerFrameAction implements Observer{
 	
@@ -57,30 +58,43 @@ public class ServerFrameAction implements Observer{
 		serverFrame.appendCommandLine(commandContent);
 	}
 	
-	public void doPrepareCharging(Socket socket, long deviceId){
+	public void doPrepareCharging(long deviceId, int portId, int chargingHour, int chargingMinute, int chargingSecond){
+		SocketWrapper wrapper = SocketHolder.get("Device-" + deviceId);
+		Socket socket = wrapper.getSocket();
 		if(null == socket){
 			return;
 		}
 		PrepareChargingMessage msg = new PrepareChargingMessage();
 		msg.setDeviceId(deviceId);
+		msg.setPortId(portId);
+		msg.setChargingHour(chargingHour);
+		msg.setChargingMinute(chargingMinute);
+		msg.setChargingSecond(chargingSecond);
 		MessageHelper.sendCmd(socket, msg);
 	}
 	
-	public void doEndCharging(Socket socket, long deviceId){
+	public void doEndCharging(long deviceId, int portId){
+		SocketWrapper wrapper = SocketHolder.get("Device-" + deviceId);
+		Socket socket = wrapper.getSocket();
 		if(null == socket){
 			return;
 		}
 		EndChargingMessage msg = new EndChargingMessage();
 		msg.setDeviceId(deviceId);
+		msg.setPortId(portId);
 		MessageHelper.sendCmd(socket, msg);
 	}
 	
-	public void doSetHeartbeatInterval(Socket socket, long deviceId){
+	public void doSetHeartbeatInterval(long deviceId, int intervalMinute, int intervalSecond){
+		SocketWrapper wrapper = SocketHolder.get("Device-" + deviceId);
+		Socket socket = wrapper.getSocket();
 		if(null == socket){
 			return;
 		}
 		SetHeartbeatIntervalMessage msg = new SetHeartbeatIntervalMessage();
 		msg.setDeviceId(deviceId);
+		msg.setHeartbeatMinute(intervalMinute);
+		msg.setHeartbeatSecond(intervalSecond);
 		MessageHelper.sendCmd(socket, msg);
 	}
 

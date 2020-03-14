@@ -134,8 +134,7 @@ public class ServerFrame extends JFrame{
 				}
 				Logger.log("准备充电");
 				appendCommandLine("准备充电 ==> "+selectedDevice);
-				SocketWrapper wrapper = SocketHolder.get("Device-" + selectedDevice);
-				action.doPrepareCharging(wrapper.getSocket(), Long.parseLong(selectedDevice));
+				action.doPrepareCharging(Long.parseLong(selectedDevice), 0, 1, 0, 0);
 			}
 		});
         
@@ -148,8 +147,7 @@ public class ServerFrame extends JFrame{
 				}
 				Logger.log("结束充电");
 				appendCommandLine("结束充电 ==> "+selectedDevice);
-				SocketWrapper wrapper = SocketHolder.get("Device-" + selectedDevice);
-				action.doEndCharging(wrapper.getSocket(), Long.parseLong(selectedDevice));
+				action.doEndCharging(Long.parseLong(selectedDevice), 0);
 			}
 		});
         
@@ -162,8 +160,7 @@ public class ServerFrame extends JFrame{
 				}
 				Logger.log("设置心跳间隔");
 				appendCommandLine("设置心跳间隔 ==> "+selectedDevice);
-				SocketWrapper wrapper = SocketHolder.get("Device-" + selectedDevice);
-				action.doSetHeartbeatInterval(wrapper.getSocket(), Long.parseLong(selectedDevice));
+				action.doSetHeartbeatInterval(Long.parseLong(selectedDevice), 0, 10);
 			}
 		});
 	}
